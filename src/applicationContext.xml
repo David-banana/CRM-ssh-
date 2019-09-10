@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		
+		<!--bean对象管理  -->
+		<bean name="user" class="CRM.Beans.User"></bean>
+		
+		
+		<!--Action对象管理  -->
+		<bean name="userAction" class="CRM.Web.UserAction" scope="prototype">
+		<property name="userService"  ref="userService"></property>
+		</bean>	
+		
+		<!--Service对象管理  -->
+		<bean name="userService" class="CRM.Service.UserServiceImpl" >
+		<property name="userDao" ref="userDao"></property>
+		</bean>
+		<!--Dao对象管理  -->
+		
+		<bean name="userDao" class="CRM.Dao.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+		</bean>
+		<!--配置Hibernate  -->
+		
+		<bean name="" 	class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		</bean>
+		<context:property-placeholder location="classpath:db.properties"/>
+		<bean name = "dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="user" value="${jdbc.User}"></property>
+		<property name="password" value="${jdbc.Password}"></property>
+		</bean>	
+		
+		<bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+		<props>
+		<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+		</props>
+		</property>
+		<property name="mappingDirectoryLocations" value="classpath:CRM/Beans"></property> 
+		</bean>	
+</beans>
